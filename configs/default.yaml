@@ -1,0 +1,48 @@
+seed: 42
+output_dir: outputs
+
+data:
+  repo_id: lerobot/libero
+  suite: libero_goal          # libero_goal | libero_spatial | libero_object | libero_10 | all
+  task_subset: [0, 1, 2]      # start with 3 tasks; set to null for the whole suite
+  obs_history: 2              # number of past observation frames given to the encoder
+  action_horizon: 16          # length of the predicted action chunk
+  val_fraction: 0.1           # episode-level split (never split frames of one episode)
+  n_aug_views: 4              # augmented views cached per frame (crop + colour jitter before DINOv2)
+  cache_dir: data_cache
+
+encoders:                     # frozen, pretrained — never trained
+  vision: facebook/dinov2-small        # 384-d CLS feature
+  text: openai/clip-vit-base-patch32   # 512-d text feature
+  image_size: 224
+
+model:                        # trained from scratch
+  d_model: 256
+  n_heads: 8
+  n_enc_layers: 4
+  n_dec_layers: 4
+  d_ff: 1024
+  dropout: 0.1
+  state_dim: 8
+  action_dim: 7
+
+diffusion:
+  num_train_steps: 100
+  schedule: squaredcos        # cosine beta schedule
+  num_inference_steps: 10     # DDIM
+  prediction: epsilon
+
+train:
+  batch_size: 256
+  lr: 1.0e-4
+  weight_decay: 1.0e-6
+  epochs: 300
+  ema_decay: 0.999
+  early_stop_patience: 20
+  num_workers: 4
+
+eval:
+  episodes_per_task: 50       # LIBERO ships 50 fixed initial states per task
+  max_steps: 300
+  execute_steps: 8            # actions executed from each predicted 16-step chunk
+  flip_sim_images: null       # set true/false after running scripts/03_check_orientation.py
