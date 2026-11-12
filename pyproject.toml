@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ita"
+version = "0.1.0"
+description = "From Instruction to Action: language-conditioned Transformer diffusion policy (CS495)"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+include = ["ita*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
