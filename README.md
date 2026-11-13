@@ -73,7 +73,7 @@ LIBERO depends on robosuite and MuJoCo, which are supported on Linux. On Windows
 sudo apt update
 sudo apt install -y build-essential git cmake ffmpeg libegl1 libgl1 libosmesa6-dev
 
-conda create -n ita python=3.10 -y
+conda create -n ita python=3.12 -y   # current LeRobot requires Python >= 3.12
 conda activate ita
 
 # Clone into the Linux filesystem (~/), not /mnt/c: file access across the boundary is slow.
@@ -81,7 +81,7 @@ cd ~
 git clone https://github.com/huggingface/lerobot.git
 pip install -e "lerobot[libero]"
 
-git clone https://github.com/<org>/ita-diffusion-policy.git
+git clone https://github.com/Ahmed-Hammoda/ita-diffusion-policy.git
 cd ita-diffusion-policy
 pip install -r requirements.txt
 pip install -e .

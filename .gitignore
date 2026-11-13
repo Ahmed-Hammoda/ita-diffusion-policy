@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.env
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Data, caches, results
+outputs/
+data_cache/
+wandb/
+runs/
+*.pt
+*.pth
+*.ckpt
+*.npz
+*.mp4
+
+# Cloned dependencies (if cloned inside the project)
+lerobot/
+LIBERO/
