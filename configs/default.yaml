@@ -45,4 +45,4 @@ eval:
   episodes_per_task: 50       # LIBERO ships 50 fixed initial states per task
   max_steps: 300
   execute_steps: 8            # actions executed from each predicted 16-step chunk
-  flip_sim_images: null       # set true/false after running scripts/03_check_orientation.py
+  flip_sim_images: true       # raw LIBERO renders are rotated 180° vs the dataset (checked with scripts/03)
