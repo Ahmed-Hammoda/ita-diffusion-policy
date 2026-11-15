@@ -110,6 +110,10 @@ python scripts/02_sim_rollout.py --suite libero_goal --task-id 0
 # Compare dataset and simulator images, then set eval.flip_sim_images in the config.
 python scripts/03_check_orientation.py
 
+# Export one demonstration (video + state/action CSV) to outputs/episodes/.
+python scripts/04_view_episode.py --list-tasks
+python scripts/04_view_episode.py --task-index 19
+
 # Unit tests for the from-scratch modules.
 pytest
 ```

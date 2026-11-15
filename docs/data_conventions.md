@@ -28,6 +28,18 @@ as float tensors in [0, 1]. Dataset images are upright.
 | 20–29 | LIBERO-Object |
 | 30–39 | LIBERO-Spatial |
 
+Episodes of a suite are also contiguous:
+
+| Suite | Episodes | Demos |
+|---|---|---|
+| LIBERO-10 | 0–378 | 379 |
+| LIBERO-Goal | 379–806 | 428 |
+| LIBERO-Object | 807–1260 | 454 |
+| LIBERO-Spatial | 1261–1692 | 432 |
+
+Each task has 29–50 demonstrations. `python scripts/04_view_episode.py --list-tasks` prints the
+full table.
+
 The order inside a block is **not** the simulator's task order (dataset index 19 is
 "open the middle drawer of the cabinet", which is LIBERO-Goal task 0 in the simulator).
 Match dataset episodes to simulator tasks by the instruction string, never by index.
