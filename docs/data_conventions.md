@@ -87,6 +87,38 @@ img = img[::-1, ::-1]
 
 This is `eval.flip_sim_images: true` in `configs/default.yaml`.
 
+## Feature cache (Step 6)
+
+Built by `python scripts/05_build_cache.py` (`ita/data/embed.py`) into `data.cache_dir`
+(default `~/ita_cache`, 1.6 GB, about 65 min on an RTX 3050 laptop GPU). Frames are decoded straight
+from the dataset's AV1 videos with torchcodec; they match `LeRobotDataset` pixel for pixel.
+
+| File | Content |
+|---|---|
+| `episodes/epNNNN.npz` | `scene`, `wrist`: (T, V, 384) fp16 DINOv2 features, V = `n_aug_views` = 4; `state` (T, 8), `action` (T, 7) raw float32; `task_index`, `episode_index` |
+| `lang.npz` | `text` (40,), `emb` (40, 512) L2-normalised CLIP text embeddings, `task_index` (40,) |
+| `meta.json` | encoders, augmentation ranges, seed, dataset min/max/mean/std of state and action |
+
+Views: view 0 is the clean frame (whole 256×256 image, bilinear resize with antialiasing to 224),
+views 1–3 add a random crop (side 85–100 %) and colour jitter (brightness, contrast, saturation ±0.3,
+hue ±0.05 turn). The augmentation parameters are drawn once per (episode, camera, view) and
+applied to every frame of the episode, so the observation history of a view differs only by real
+motion (frame t → t+1 cosine similarity ≈ 0.98, the same as the clean view). Images are normalised
+with the ImageNet mean/std; the feature is DINOv2's `pooler_output` (layer-normed CLS token).
+
+**At evaluation time** a simulator frame must go through exactly the view-0 path: render at
+256×256, rotate 180° with `img[::-1, ::-1].copy()` (the `.copy()` is needed because
+`torch.from_numpy` rejects negative strides), convert to a (1, 3, 256, 256) uint8 tensor, then
+`make_views(img, n_views=1)` and `DinoEncoder`.
+
+## Selecting tasks
+
+`select_episodes(lowdim, suite, task_indices)` takes **dataset** task indices. To train on
+simulator tasks, convert them by instruction string first:
+`sim_to_dataset_tasks("libero_goal", [0, 1, 2], load_tasks(root))` → `[19, 17, 14]`.
+The mapping was checked for all four suites: each simulator suite maps one-to-one onto its
+dataset block.
+
 ## Evaluation protocol details
 
 - 50 fixed initial states per task, from `suite.get_task_init_states(task_id)`.

@@ -4,12 +4,12 @@ output_dir: outputs
 data:
   repo_id: lerobot/libero
   suite: libero_goal          # libero_goal | libero_spatial | libero_object | libero_10 | all
-  task_subset: [0, 1, 2]      # start with 3 tasks; set to null for the whole suite
+  task_subset: [0, 1, 2]      # SIMULATOR task ids (mapped to dataset tasks by instruction); null = whole suite
   obs_history: 2              # number of past observation frames given to the encoder
   action_horizon: 16          # length of the predicted action chunk
   val_fraction: 0.1           # episode-level split (never split frames of one episode)
   n_aug_views: 4              # augmented views cached per frame (crop + colour jitter before DINOv2)
-  cache_dir: data_cache
+  cache_dir: ~/ita_cache      # feature cache (scripts/05_build_cache.py), 1.6 GB; Linux side of WSL is much faster than /mnt/c
 
 encoders:                     # frozen, pretrained — never trained
   vision: facebook/dinov2-small        # 384-d CLS feature
