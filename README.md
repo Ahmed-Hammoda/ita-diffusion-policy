@@ -107,12 +107,19 @@ python scripts/01_explore_dataset.py --episodes 0 1 2
 # Run the simulator with random actions and save a video to outputs/sim/.
 python scripts/02_sim_rollout.py --suite libero_goal --task-id 0
 
+# Or watch it live in a MuJoCo window (needs a display; WSLg provides one on Windows 11).
+python scripts/02b_sim_live.py --suite libero_goal --task-id 0
+
 # Compare dataset and simulator images, then set eval.flip_sim_images in the config.
 python scripts/03_check_orientation.py
 
 # Export one demonstration (video + state/action CSV) to outputs/episodes/.
 python scripts/04_view_episode.py --list-tasks
 python scripts/04_view_episode.py --task-index 19
+
+# Pre-compute frozen DINOv2 / CLIP features for all 1,693 episodes (~65 min on an RTX 3050, resumable).
+python scripts/05_build_cache.py --limit 5     # quick test first
+python scripts/05_build_cache.py
 
 # Unit tests for the from-scratch modules.
 pytest
